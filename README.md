@@ -162,7 +162,7 @@ Examples include:
 Techstore-microservices
 
 ├── api-gateway
-├── user-auth-service
+├── user-service
 ├── product-service
 ├── cart-service
 ├── order-service
