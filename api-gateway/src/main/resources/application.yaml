@@ -1,0 +1,98 @@
+server:
+  port: ${SERVER_PORT}
+
+spring:
+  application:
+    name: ms-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: ms-user
+          uri: ${MS_USER_URL}
+          predicates:
+            - Path=/v1/user/**
+        - id: ms-user-auth
+          uri: ${MS_USER_URL}
+          predicates:
+            - Path=/v1/auth/**
+        - id: ms-user-role
+          uri: ${MS_USER_URL}
+          predicates:
+            - Path=/v1/role/**
+
+        - id: ms-catalog-product
+          uri: ${MS_CATALOG_URL}
+          predicates:
+            - Path=/v1/product/**
+        - id: ms-catalog-component
+          uri: ${MS_CATALOG_URL}
+          predicates:
+            - Path=/v1/component/**
+        - id: ms-catalog-customBouquet
+          uri: ${MS_CATALOG_URL}
+          predicates:
+            - Path=/v1/custom-bouquet/**
+        - id: ms-catalog-category
+          uri: ${MS_CATALOG_URL}
+          predicates:
+            - Path=/v1/category/**
+
+        - id: ms-cart
+          uri: ${MS_CART_URL}
+          predicates:
+            - Path=/v1/cart/**
+
+        - id: ms-wallet
+          uri: ${MS_WALLET_URL}
+          predicates:
+            - Path=/v1/wallet/**
+        - id: ms-wallet-transaction
+          uri: ${MS_WALLET_URL}
+          predicates:
+            - Path=/v1/wallet-transaction/**
+
+        - id: ms-order
+          uri: ${MS_ORDER_URL}
+          predicates:
+            - Path=/v1/order/**
+        - id: ms-order-Item
+          uri: ${MS_ORDER_URL}
+          predicates:
+            - Path=/v1/order-item/**
+
+        - id: ms-payment
+          uri: ${MS_PAYMENT_URL}
+          predicates:
+            - Path=/v1/payment/**
+
+        - id: ms-notification
+          uri: ${MS_NOTIFICATION_URL}
+          predicates:
+            - Path=/v1/notification/**
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+
+secretKey: ${JWT_SECRET_KEY}
+
+gateway:
+  public-paths:
+    - /v1/auth
+    - /v1/product
+    - /v1/category
+    - /v1/custom-bouquet
+    - /v1/component

@@ -1,0 +1,3 @@
+order:
+  routing_key: order.create.key
+  exchange: order.exchange

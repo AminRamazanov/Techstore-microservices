@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: wallet-service
+
+payment:
+  exchange: payment.exchange
+  success-routing-key: payment.success.key
+  failure-routing-key: payment.failed.key

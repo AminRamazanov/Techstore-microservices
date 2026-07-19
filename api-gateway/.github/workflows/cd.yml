@@ -1,0 +1,33 @@
+name: CD - Deploy Gateway
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'latest'
+
+      - name: Configure kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBECONFIG_DATA }}" > ~/.kube/config
+
+      - name: Update Docker image tag
+        run: |
+          kubectl set image deployment/api-gateway api-gateway=${{ secrets.DOCKER_USERNAME }}/api-gateway:latest
+
+      - name: Apply manifests
+        run: |
+          kubectl apply -f k8s/

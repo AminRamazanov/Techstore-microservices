@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway
+  namespace: my-project
+  annotations:
+    keel.sh/policy: force
+    keel.sh/trigger: poll
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: aminramazanov/api-gateway:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            # ConfigMap-dən environment dəyişənlər
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: SERVER_PORT
+            - name: MS_USER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: MS_USER_URL
+            - name: MS_CATALOG_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: MS_CATALOG_URL
+            - name: MS_CART_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: MS_CART_URL
+            - name: MS_WALLET_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: MS_WALLET_URL
+            - name: MS_ORDER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: MS_ORDER_URL
+            - name: MS_PAYMENT_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: MS_PAYMENT_URL
+            - name: MS_NOTIFICATION_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: api-gateway-config
+                  key: MS_NOTIFICATION_URL
+            # Secret-dən JWT secret
+            - name: JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: secretKey
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 15
